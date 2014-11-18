@@ -4,6 +4,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\models\User;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -33,7 +34,7 @@ AppAsset::register($this);
                 ],
             ]);
             $menu = [];
-            echo Nav::widget([
+            $admin_widget = [
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Home', 'url' => ['/site/index']],
@@ -59,13 +60,26 @@ AppAsset::register($this);
                     ['label' => 'Comment', 'url' => ['/admin/comment/index']],
                     ['label' => 'Order', 'url' => ['/admin/order/index']],
                     ['label' => 'User', 'url' => ['/admin/user/index']],
+                    ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                        'url' => ['/site/logout'],
+                        'linkOptions' => ['data-method' => 'post']],
+                    ],
+            ];
+            $user_widget = [
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => [
+                    ['label' => 'Home', 'url' => ['/site/index']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
                         ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']],
                 ],
-            ]);
+            ];
+            if (Yii::$app->user->getIdentity()->role == User::ROLE_ADMIN)
+                echo Nav::widget($admin_widget);
+            else
+                echo Nav::widget($user_widget);
             NavBar::end();
         ?>
 

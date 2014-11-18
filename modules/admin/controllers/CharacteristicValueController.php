@@ -23,6 +23,16 @@ class CharacteristicValueController extends DefaultController
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index','view','create','update','delete'],
+                        'roles' => ['administrator'],
+                    ],
+                ],
+            ],
         ];
     }
 

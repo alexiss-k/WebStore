@@ -30,7 +30,7 @@ class ProductController extends DefaultController
                     [
                         'allow' => true,
                         'actions' => ['index','view','create','update','delete'],
-                        'roles' => ['@'],
+                        'roles' => ['administrator'],
                     ],
                 ],
             ],
