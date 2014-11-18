@@ -58,7 +58,7 @@ class CommentModel extends \yii\db\ActiveRecord
      */
     public function getIdUser0()
     {
-        return $this->hasOne(UserModel::className(), ['id' => 'idUser']);
+        return $this->hasOne(User::className(), ['id' => 'idUser']);
     }
 
     /**

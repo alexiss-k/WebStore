@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\PaymentModel;
+use app\models\ShippingModel;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\OrderModel */
@@ -18,9 +21,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'date')->textInput() ?>
 
-    <?= $form->field($model, 'idPayment')->textInput() ?>
+    <?= $form->field($model, 'idPayment')->dropDownList(ArrayHelper::map(PaymentModel::find()->all(), 'id', 'name')) ?>
 
-    <?= $form->field($model, 'idShipping')->textInput() ?>
+    <?= $form->field($model, 'idShipping')->dropDownList(ArrayHelper::map(ShippingModel::find()->all(), 'id', 'name')) ?>
 
     <?= $form->field($model, 'paymentStatus')->textInput() ?>
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace app\modules\admin\controllers;
+use yii\filters\AccessControl;
 
 use Yii;
 use app\models\CharacteristicValueModel;

@@ -2,82 +2,57 @@
 
 namespace app\models;
 
-class User extends \yii\base\Object implements \yii\web\IdentityInterface
+use Yii;
+
+/**
+ * This is the model class for table "user".
+ *
+ * @property integer $id
+ * @property string $email
+ * @property string $name
+ * @property string $phone
+ * @property string $country
+ * @property string $city
+ * @property integer $zipCode
+ * @property string $address
+ * @property string $password
+ * @property int $role
+ *
+ * @property Comment[] $comments
+ * @property Order[] $orders
+ */
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-    public $role;
 
     const ROLE_USER = 1;
     const ROLE_ADMIN = 10;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-            'role' => 10,
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-            'role' => 1,
-        ],
-    ];
-
-    /**
-     * @inheritdoc
-     */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return static::findOne($id);   
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public static function findIdentityByAccessToken($token, $type=null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
         return null;
     }
 
-    /**
-     * Finds user by username
-     *
-     * @param  string      $username
-     * @return static|null
-     */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        $user = static::find()
+        ->where(['email' => $username])
+        ->one();
+        return $user!=null ? new static($user) : null;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->password;
     }
 
     public function getRole()
@@ -85,31 +60,14 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
         return $this->role;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
+        return $this->getAuthKey() === sha1($authKey);
     }
 
-    /**
-     * Validates password
-     *
-     * @param  string  $password password to validate
-     * @return boolean if password provided is valid for current user
-     */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === sha1($password);
     }
 
     public function validateRole($role)
@@ -120,5 +78,63 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
             return ROLE_ADMIN == $this->role || ROLE_USER == $this->role;
         else
             return true; 
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        return 'user';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['email', 'name', 'phone', 'country', 'city', 'zipCode', 'address', 'password', 'role'], 'required'],
+            [['zipCode'], 'integer'],
+            [['email'], 'email'],
+            [['email', 'address', 'password'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 100],
+            [['phone', 'country', 'city'], 'string', 'max' => 50]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'email' => 'Email',
+            'name' => 'Name',
+            'phone' => 'Phone',
+            'country' => 'Country',
+            'city' => 'City',
+            'zipCode' => 'Zip Code',
+            'address' => 'Address',
+            'password' => 'Password',
+            'role' => 'Role',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(CommentModel::className(), ['idUser' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrders()
+    {
+        return $this->hasMany(OrderModel::className(), ['idUser' => 'id']);
     }
 }

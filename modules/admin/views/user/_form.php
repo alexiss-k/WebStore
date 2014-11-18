@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'address')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => 255]) ?>
+    <?= $form->field($model, 'role')->dropDownList([1 => 'User', 10 => 'Administrator']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

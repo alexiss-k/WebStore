@@ -4,7 +4,7 @@ namespace app\modules\admin\controllers;
 use yii\filters\AccessControl;
 
 use Yii;
-use app\models\UserModel;
+use app\models\User;
 use app\models\UserSearch;
 use app\modules\admin\controllers\DefaultController;
 use yii\web\NotFoundHttpException;
@@ -123,7 +123,7 @@ class UserController extends DefaultController
      */
     protected function findModel($id)
     {
-        if (($model = UserModel::findOne($id)) !== null) {
+        if (($model = User::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

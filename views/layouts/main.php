@@ -60,7 +60,7 @@ AppAsset::register($this);
                     ['label' => 'Comment', 'url' => ['/admin/comment/index']],
                     ['label' => 'Order', 'url' => ['/admin/order/index']],
                     ['label' => 'User', 'url' => ['/admin/user/index']],
-                    ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                    ['label' => 'Logout (' . Yii::$app->user->identity->name . ')',
                         'url' => ['/site/logout'],
                         'linkOptions' => ['data-method' => 'post']],
                     ],
@@ -71,7 +71,7 @@ AppAsset::register($this);
                     ['label' => 'Home', 'url' => ['/site/index']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
-                        ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                        ['label' => 'Logout (' . Yii::$app->user->identity->name . ')',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']],
                 ],
