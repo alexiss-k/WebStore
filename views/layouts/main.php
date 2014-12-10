@@ -41,7 +41,6 @@ AppAsset::register($this);
                     ['label' => 'Products',
                         'items' => [
                             ['label' => 'Product list', 'url' => ['/admin/product/index'],],
-                            ['label' => 'Characteristic Values', 'url' => ['/admin/characteristic-value/index']],
                             ['label' => 'Price History', 'url' => ['/admin/price-history/index']],
                         ],
                     ],
@@ -69,15 +68,23 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Home', 'url' => ['/site/index']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => 'Login', 'url' => ['/site/login']] :
-                        ['label' => 'Logout (' . Yii::$app->user->identity->name . ')',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
+                    ['label' => 'Logout (' . Yii::$app->user->identity->name . ')',
+                        'url' => ['/site/logout'],
+                        'linkOptions' => ['data-method' => 'post']],
+                ],
+            ];
+            $guest_widget = [
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => [
+                    ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Login', 'url' => ['/site/login']],
+                    ['label' => 'Registration', 'url' => ['/site/registration']]
                 ],
             ];
             if (Yii::$app->user->getIdentity()->role == User::ROLE_ADMIN)
                 echo Nav::widget($admin_widget);
+            else if (Yii::$app->user->isGuest)
+                echo Nav::widget($guest_widget);
             else
                 echo Nav::widget($user_widget);
             NavBar::end();

@@ -12,6 +12,7 @@ use Yii;
  * @property integer $idProduct
  * @property string $text
  * @property string $date
+ * @property integer $mark
  *
  * @property User $idUser0
  * @property Product $idProduct0
@@ -32,8 +33,8 @@ class CommentModel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idUser', 'idProduct', 'text', 'date'], 'required'],
-            [['idUser', 'idProduct'], 'integer'],
+            [['idUser', 'idProduct', 'text', 'date', 'mark'], 'required'],
+            [['idUser', 'idProduct', 'mark'], 'integer'],
             [['date'], 'safe'],
             [['text'], 'string', 'max' => 600]
         ];
@@ -50,6 +51,7 @@ class CommentModel extends \yii\db\ActiveRecord
             'idProduct' => 'Id Product',
             'text' => 'Text',
             'date' => 'Date',
+            'mark' => 'Mark'
         ];
     }
 

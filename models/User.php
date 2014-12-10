@@ -96,7 +96,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'name', 'phone', 'country', 'city', 'zipCode', 'address', 'password', 'role'], 'required'],
             [['zipCode'], 'integer'],
-            [['email'], 'email'],
+            [['email'], 'email'], //TODO : Check existance
             [['email', 'address', 'password'], 'string', 'max' => 255],
             [['name'], 'string', 'max' => 100],
             [['phone', 'country', 'city'], 'string', 'max' => 50]
@@ -136,5 +136,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getOrders()
     {
         return $this->hasMany(OrderModel::className(), ['idUser' => 'id']);
+    }
+
+    public function register()
+    {
+        $this->password = sha1($this->password);
+        $this->role = User::ROLE_USER;
+        return $this->save();
     }
 }

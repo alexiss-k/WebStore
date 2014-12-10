@@ -28,9 +28,8 @@ class CharacteristicValueController extends DefaultController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'allow' => true,
+                        'allow' => false,
                         'actions' => ['index','view','create','update','delete'],
-                        'roles' => ['administrator'],
                     ],
                 ],
             ],

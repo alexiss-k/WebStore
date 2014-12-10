@@ -45,7 +45,7 @@ class ProductModel extends \yii\db\ActiveRecord
             [['description'], 'string'],
             [['price', 'rating'], 'number'],
             [['quantity', 'isAvailable', 'amountRated', 'idCategory'], 'integer'],
-            [['name', 'photo'], 'string', 'max' => 255]
+            [['name'], 'string', 'max' => 255]
         ];
     }
 

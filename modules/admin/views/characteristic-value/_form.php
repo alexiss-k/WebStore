@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\CharacteristicModel;
+use app\models\ProductModel;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
@@ -14,7 +15,7 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'idProduct')->textInput() ?>
+    <?= $form->field($model, 'idProduct')->dropDownList(ArrayHelper::map(ProductModel::find()->all(), 'id', 'name')) ?>
 
     <?= $form->field($model, 'idCharacteristic')->dropDownList(ArrayHelper::map(CharacteristicModel::find()->all(), 'id', 'name')) ?>
 

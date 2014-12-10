@@ -23,6 +23,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'text') ?>
 
+    <?= $form->field($model, 'mark') ?>
+
     <?= $form->field($model, 'date') ?>
 
     <div class="form-group">

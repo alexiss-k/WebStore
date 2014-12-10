@@ -5,6 +5,7 @@ use yii\filters\AccessControl;
 
 use Yii;
 use app\models\CommentModel;
+use app\models\ProductModel;
 use app\models\CommentSearch;
 use app\modules\admin\controllers\DefaultController;
 use yii\web\NotFoundHttpException;
@@ -74,6 +75,10 @@ class CommentController extends DefaultController
         $model = new CommentModel();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $product = ProductModel::find()->where(['id'=>$model->idProduct])->one();
+            $product->rating = (($product->rating * $product->amountRated) + $model->mark ) / ($product->amountRated + 1);
+            $product->amountRated = $product->amountRated + 1;
+            $product->save();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -91,8 +96,11 @@ class CommentController extends DefaultController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $mark = $model->mark;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $product = ProductModel::find()->where(['id'=>$model->idProduct])->one();
+            $product->rating = (($product->rating * $product->amountRated) - $mark + $model->mark) / $product->amountRated;
+            $product->save();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -109,7 +117,14 @@ class CommentController extends DefaultController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+
+        $product = ProductModel::find()->where(['id'=>$model->idProduct])->one();
+        $product->rating = (($product->rating * $product->amountRated) - $model->mark) / ($product->amountRated - 1);
+        $product->amountRated = $product->amountRated - 1;
+        $product->save();
+
+        $model->delete();
 
         return $this->redirect(['index']);
     }
