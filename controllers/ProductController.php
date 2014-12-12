@@ -7,6 +7,14 @@ use app\models\CategoryModel;
 
 class ProductController extends \yii\web\Controller
 {
+
+    public function afterAction($action, $result)
+    {
+        $result = parent::afterAction($action, $result);
+        \Yii::$app->user->setReturnUrl(array_merge([$this->getRoute()], $action->controller->actionParams));
+        return $result;
+    }
+
     public function actionCatalog($category=null)
     {
     	$categories = CategoryModel::find()->where(['parentId'=>null])->all();
@@ -100,8 +108,10 @@ class ProductController extends \yii\web\Controller
 
     	if ($model == null)
     		throw new NotFoundHttpException('The requested product does not exist.');
+    	$this_comment = $model->getComments()->where(['idUser'=>\Yii::$app->user->id])->one();
         return $this->render('view', ['model' => $model,
         	'comments' => $comments,
+        	'commented' => ($this_comment != null),
         	'categories' => $categories, 
         	'child_categories' => $child_categories, 
         	'parent_categories' => array_reverse($parent_categories),

@@ -15,7 +15,7 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            /*'access' => [
+            'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout'],
                 'rules' => [
@@ -25,7 +25,7 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                 ],
-            ],*/
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -56,7 +56,7 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
+            $this->redirect(\Yii::$app->user->getReturnUrl());
         }
 
         $model = new LoginForm();
@@ -72,7 +72,7 @@ class SiteController extends Controller
     public function actionRegistration()
     {
         if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
+            $this->redirect(\Yii::$app->user->getReturnUrl());
         }
 
         $model = new User();
@@ -87,7 +87,7 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        $this->redirect(\Yii::$app->user->getReturnUrl());
     }
 
     public function actionContact()

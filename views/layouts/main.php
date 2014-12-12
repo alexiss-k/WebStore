@@ -118,6 +118,28 @@ AppAsset::register($this);
 <script>
     <?= CartWidget::widget() ?>
 </script>
+<script type="text/javascript">
+$(document).ready(function(){
+//  Stars on prodcut page
+    $(".rating input:radio").attr("checked", false);
+    $('.rating input').click(function () {
+        $(".rating span").removeClass('checked');
+        $(this).parent().addClass('checked');
+    });
+});
+// End stars
+
+// Review add button
+$(document).ready(function(){
+    $('#str1').click();
+    $('#add-review').click(function(){
+        $('#add-review').hide();
+        $('#review-form').css('visibility','visible');
+        $('#review-form').css('height','5em');
+    });
+});
+// End review add button
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

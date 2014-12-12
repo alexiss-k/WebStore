@@ -8,6 +8,7 @@ use app\models\ProductModel;
 class CartWidget extends Widget{
     
     public $value = 0;
+    public $items = 0;
     public $message;
     
     public function init(){
@@ -20,16 +21,18 @@ class CartWidget extends Widget{
             $products = unserialize($cart_info);
             if (is_array($products)) {
                 $product_ids = array_keys($products);
-                $product_models = ProductModel::find()->where(['id'=>[$product_ids]])->all();
+                $product_models = ProductModel::find()->where(['id'=>$product_ids])->all();
                 foreach ($product_models as $product_model)
                 {
-                    $value += $product_model->price * $products[$product_model->id];
+                    $this->value += $product_model->price * $products[$product_model->id];
+                    $this->items += $products[$product_model->id];
+                    \Yii::info('Quantity of '.$product_model->id.' ('.$product_model->price.') - '.$products[$product_model->id]);
                 }
             }
         }
 
         if ($this->value > 0)
-            $this->message = "$('.cart').addClass('active'); $('.cart').append(\"<span class='cart-value'> ({$this->value} UAH)</span>\");";
+            $this->message = "$('.cart').addClass('active'); $('.cart').append(\"<span class='cart-value'> ({$this->value} UAH - {$this->items} items)</span>\");";
         else
             $this->message = "";
     }
