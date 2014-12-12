@@ -5,6 +5,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
+use app\components\CartWidget;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -27,7 +28,7 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'My Company',
+                'brandLabel' => '',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
@@ -81,6 +82,14 @@ AppAsset::register($this);
                     ['label' => 'Registration', 'url' => ['/site/registration']]
                 ],
             ];
+
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-left'],
+                'items' => [
+                    ['label' => 'Cart ', 'linkOptions' => ['class'=>'cart'], 'url' => ['/cart/view']],
+                ],
+            ]);
+
             if (Yii::$app->user->getIdentity()->role == User::ROLE_ADMIN)
                 echo Nav::widget($admin_widget);
             else if (Yii::$app->user->isGuest)
@@ -106,6 +115,9 @@ AppAsset::register($this);
     </footer>
 
 <?php $this->endBody() ?>
+<script>
+    <?= CartWidget::widget() ?>
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

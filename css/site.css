@@ -89,3 +89,28 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+
+.cart:before {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    padding-right: 5px;
+    content: "\e116";
+}
+
+.cart {
+    vertical-align: center;
+    font-size: 1.2em;
+}
+
+.cart.active {
+    color: #BFC3C3 !important;   
+}
+
+.cart-value {
+    font-size: 0.85em !important;
+}
