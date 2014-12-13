@@ -15,8 +15,16 @@ class ProductController extends \yii\web\Controller
         return $result;
     }
 
-    public function actionCatalog($category=null)
+    public function actionCatalog($category=null,$view=null)
     {
+        if ($view!=null)
+        {
+            \Yii::$app->response->cookies->add(new \yii\web\Cookie(['name' => 'catalog_view', 'value' => 'catalog_'.$view]));
+            return $this->redirect(\Yii::$app->user->getReturnUrl());
+        }
+        $view = \Yii::$app->request->cookies->getValue('catalog_view');
+        if ($view == null)
+            $view = 'catalog_grid';
     	$categories = CategoryModel::find()->where(['parentId'=>null])->all();
     	$products = array();
     	$parent_categories = array();
@@ -58,7 +66,7 @@ class ProductController extends \yii\web\Controller
     	}
     	else
     		$products = ProductModel::find()->all();
-        return $this->render('catalog', 
+        return $this->render($view, 
         	['products' => $products, 
         	'categories' => $categories, 
         	'child_categories' => $child_categories, 

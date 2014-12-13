@@ -46,6 +46,19 @@ use yii\widgets\ActiveForm;
                         <h3 class="pull-right" style="position:relative; top:-22px;"><?=$model->price?> UAH</h3>
                         <h3><a href="#"><?=$model->name?></a></h3>
                         <p><?=$model->description?></p>
+                        <?php if ($model->getCharacteristicValues()->count() > 0){?>
+                        <div class="col-md-12" style="padding-bottom:20px;">
+                        <h4>Characteristics</h4>
+                        <?php foreach($model->getCharacteristicValues()->all() as $characteristic) {?>
+	                        <div class="col-md-3">
+	                        <b><?= $characteristic->getIdCharacteristic0()->one()->name?> :</b>
+	                        </div>
+	                        <div class="col-md-9">
+	                        <?= $characteristic->value?> <?= $characteristic->getIdCharacteristic0()->one()->value?>
+	                        </div>
+	                    <?php }?>
+                        </div>
+                        <?php }?>
                     </div>
                     <div class="ratings">
                         <p class="pull-right"><?=count($comments)?> reviews</p>

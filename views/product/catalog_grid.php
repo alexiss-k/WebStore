@@ -16,7 +16,7 @@ use app\models\ProductModel;
 
 			<div class="col-md-12">
                 <div class="lead col-md-3">Web Store NURE</div>
-	                <?php echo $this->render('catalog_breadcrumbs',['category'=>$category, 'parent_categories'=>$parent_categories, 'model'=>$model]);?>
+	                <?php echo $this->render('catalog_breadcrumbs',['category'=>$category, 'parent_categories'=>$parent_categories, 'model'=>$model, 'view'=>true]);?>
 			</div>
             <div class="col-md-3">
             	<?php echo $this->render('catalog_categories_menu',
@@ -31,6 +31,7 @@ use app\models\ProductModel;
 
             <div class="col-md-9">
                 <div class="row">
+                <?php if (count($products)==0) echo "<div class='col-md-12 text-center'><img src='/files/nothing.png' /></div>";?>
                 <?php foreach ($products as $product) {?>
                     <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">

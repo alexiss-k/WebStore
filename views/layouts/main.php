@@ -38,7 +38,7 @@ AppAsset::register($this);
             $admin_widget = [
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Home', 'url' => ['/']],
                     ['label' => 'Products',
                         'items' => [
                             ['label' => 'Product list', 'url' => ['/admin/product/index'],],
@@ -68,7 +68,7 @@ AppAsset::register($this);
             $user_widget = [
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Home', 'url' => ['/']],
                     ['label' => 'Logout (' . Yii::$app->user->identity->name . ')',
                         'url' => ['/site/logout'],
                         'linkOptions' => ['data-method' => 'post']],
@@ -77,7 +77,7 @@ AppAsset::register($this);
             $guest_widget = [
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Home', 'url' => ['/']],
                     ['label' => 'Login', 'url' => ['/site/login']],
                     ['label' => 'Registration', 'url' => ['/site/registration']]
                 ],
@@ -139,6 +139,67 @@ $(document).ready(function(){
     });
 });
 // End review add button
+
+// Cart bindings
+$(document).ready(function(){
+    $('#refresh-cart').click(function(){
+        $('#refresh-cart-form').submit();
+    });
+
+    $('.remove-button').click(function(){
+        var product_id = $(this).attr('data-product-id');
+        $('#productQuantity'+product_id).val('0');
+        $('#refresh-cart').click();
+    });
+
+    $('#shipping-method').change(function(){
+        $('#hidden-shipping').val($('#shipping-method').val());
+        refreshPrice();
+    });
+
+    $('#checkout-button').click(function(){
+        if ($('#shipping-method').val()=='') {
+            $('#shippingModal').modal();
+        }
+        else {
+            $('#checkoutModal').modal();
+        }
+    });
+
+    refreshPrice();
+});
+
+function refreshPrice()
+{
+    $('#shipping_price').html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>');
+    $('#total_price').html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>');
+    var subtotal_price = parseFloat($('#subtotal_price').attr('data-value'));
+
+    var shipping_method = $('#shipping-method').val();
+    if (shipping_method == ''){
+        onShippingSuccess('0');
+        return;
+    }
+
+    $.post(
+      "/shipping/"+shipping_method,
+      {
+        subtotal: subtotal_price,
+      },
+      onShippingSuccess
+    )
+     
+    function onShippingSuccess(data)
+    {
+        var shipping_cost = parseFloat(data);
+        $('#shipping_price').html(shipping_cost + ' ₴');
+        var subtotal_price = parseFloat($('#subtotal_price').attr('data-value'));
+        $('#subtotal_price').html(subtotal_price + ' ₴');
+        var total_price = shipping_cost + subtotal_price;
+        $('#total_price').html(total_price + ' ₴');
+    }
+
+}
 </script>
 </body>
 </html>

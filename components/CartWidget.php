@@ -32,7 +32,7 @@ class CartWidget extends Widget{
         }
 
         if ($this->value > 0)
-            $this->message = "$('.cart').addClass('active'); $('.cart').append(\"<span class='cart-value'> ({$this->value} UAH - {$this->items} items)</span>\");";
+            $this->message = "$('.cart').addClass('active'); $('.cart').append(\"<span class='cart-value'> ({$this->value} ₴ - {$this->items} items)</span>\");";
         else
             $this->message = "";
     }
