@@ -29,7 +29,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public static function findIdentity($id)
     {
-        return static::findOne($id);   
+        $user = \Yii::$app->cache->get('user_'.$id);
+        if ($user === false) {
+            $user = User::find()->where(['id'=>$id])->one();
+            \Yii::$app->cache->add('user_'.$id,$user);
+        }
+        return $user;   
     }
 
     public static function findIdentityByAccessToken($token, $type=null)
@@ -143,5 +148,26 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->password = sha1($this->password);
         $this->role = User::ROLE_USER;
         return $this->save();
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        \Yii::$app->cache->delete('user_'.$this->id);
+        if (parent::afterSave($insert, $changedAttributes)) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function beforeDelete()
+    {
+        \Yii::$app->cache->delete('user_'.$this->id);
+        if (parent::beforeDelete()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

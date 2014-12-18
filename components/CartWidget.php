@@ -21,7 +21,7 @@ class CartWidget extends Widget{
             $products = unserialize($cart_info);
             if (is_array($products)) {
                 $product_ids = array_keys($products);
-                $product_models = ProductModel::find()->where(['id'=>$product_ids])->all();
+                $product_models = ProductModel::getProducts($product_ids);//find()->where(['id'=>$product_ids])->all();
                 foreach ($product_models as $product_model)
                 {
                     $this->value += $product_model->price * $products[$product_model->id];

@@ -115,4 +115,67 @@ class ProductModel extends \yii\db\ActiveRecord
     {
         return $this->hasMany(OrderModel::className(), ['id' => 'idOrder'])->viaTable('{product_list}', ['idProduct' => 'id']);
     }
+
+    /**
+     * @return \app\models\ProductModel
+     */
+    public static function getProduct($id)
+    {
+        $product = \Yii::$app->cache->get('product_'.$id);
+        if ($product === false) {
+            $product = ProductModel::find()->where(['id'=>$id])->one();
+            \Yii::$app->cache->add('product_'.$id,$product);
+        }
+        return $product;
+    }
+
+    public static function getProducts($ids)
+    {
+        $products = array();
+        foreach($ids as $id)
+        {
+            $products[] = ProductModel::getProduct($id);
+        }
+        return $products;
+    }
+
+    public static function getProductsInCategories($categoryIds)
+    {
+        $result_products = array();
+        foreach($categoryIds as $categoryId)
+        {
+            $products = \Yii::$app->cache->get('products_category_'.$categoryId);
+            if ($products === false) {
+                $products = ProductModel::find()->where(['idCategory'=>$categoryId])->all();
+                \Yii::$app->cache->add('products_category_'.$categoryId,$products);
+            }
+            foreach($products as $product)
+                $result_products[] = $product;
+        }
+        return $result_products;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        \Yii::$app->cache->delete('product_'.$this->id);
+        \Yii::$app->cache->delete('products_category_'.$this->idCategory);
+        if (parent::afterSave($insert, $changedAttributes)) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function beforeDelete()
+    {
+        \Yii::$app->cache->delete('product_'.$this->id);
+        \Yii::$app->cache->delete('products_category_'.$this->idCategory);
+        if (parent::beforeDelete()) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

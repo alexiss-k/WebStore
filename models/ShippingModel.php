@@ -57,4 +57,36 @@ class ShippingModel extends \yii\db\ActiveRecord
     {
         return $this->hasMany(OrderModel::className(), ['idShipping' => 'id']);
     }
+
+    public static function getShippings()
+    {
+        $shippings = \Yii::$app->cache->get('shippings');
+        if ($shippings === false) {
+            $shippings = ShippingModel::find()->all();
+            \Yii::$app->cache->add('shippings',$shippings);
+        }
+        return $shippings;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        \Yii::$app->cache->delete('shippings');
+        if (parent::afterSave($insert, $changedAttributes)) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function beforeDelete()
+    {
+        \Yii::$app->cache->delete('shippings');
+        if (parent::beforeDelete()) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -39,13 +39,16 @@ use yii\widgets\ActiveForm;
             </div>
 
             <div class="col-md-9">
-
                 <div class="thumbnail">  <!-- Product info start-->
                     <img class="img-responsive" src="<?= '/'.$model->photo ?>" alt="">
                     <div class="caption-full">
                         <h3 class="pull-right" style="position:relative; top:-22px;"><?=$model->price?> UAH</h3>
                         <h3><a href="#"><?=$model->name?></a></h3>
                         <p><?=$model->description?></p>
+<?php
+$dependency = new \yii\caching\ExpressionDependency(['expression'=>'\Yii::$app->cache->get(\'product_\'.$model->id)']);
+if($this->beginCache('product_view_'.$model->id,['dependency'=>$dependency])) {
+?>
                         <?php if ($model->getCharacteristicValues()->count() > 0){?>
                         <div class="col-md-12" style="padding-bottom:20px;">
                         <h4>Characteristics</h4>
@@ -59,6 +62,10 @@ use yii\widgets\ActiveForm;
 	                    <?php }?>
                         </div>
                         <?php }?>
+<?php 
+$this->endCache('product_view_'.$model->id);
+}
+?>
                     </div>
                     <div class="ratings">
                         <p class="pull-right"><?=count($comments)?> reviews</p>
@@ -119,7 +126,10 @@ use yii\widgets\ActiveForm;
 	                    </div>
 	                    <?php } ?>
 
-	                    
+<?php
+$dependency = new \yii\caching\ExpressionDependency(['expression'=>'\Yii::$app->cache->get(\'comments_product_\'.$model->id)']);
+if($this->beginCache('product_view_comments_'.$model->id,['dependency'=>$dependency])) {
+?>	                    
 	                    <div class="row"> <!-- Reviews start-->
 	                    <?php
 		                    foreach($comments as $comment)
@@ -157,6 +167,10 @@ use yii\widgets\ActiveForm;
 		                    }
 		                    ?>
 		                </div> <!-- Reviews end-->
+<?php 
+$this->endCache('product_view_comments_'.$model->id);
+}
+?>
 
 	                <?php
                 	}

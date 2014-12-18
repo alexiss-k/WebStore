@@ -33,8 +33,8 @@ class CartController extends Controller
         $cart_info = \Yii::$app->request->cookies->getValue('cart');
         $cart_info = unserialize($cart_info);
         if (is_array($cart_info)) {
-            $products = ProductModel::find()->where(['id'=>array_keys($cart_info)])->all();
-            $shippings = ShippingModel::find()->all();
+            $products = ProductModel::getProducts(array_keys($cart_info));//find()->where(['id'=>array_keys($cart_info)])->all();
+            $shippings = ShippingModel::getShippings();//find()->all();
             return $this->render('view',['cart'=>$cart_info,'products'=>$products,'shippings'=>$shippings]);
         }
         else 

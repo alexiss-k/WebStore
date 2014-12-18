@@ -70,4 +70,53 @@ class CommentModel extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ProductModel::className(), ['id' => 'idProduct']);
     }
+
+    public static function getCommentsToProduct($productId)
+    {
+        $comments = \Yii::$app->cache->get('comments_product_'.$productId);
+        if ($comments === false) {
+            $comments = CommentModel::find()->where(['idProduct'=>$productId])->all();
+            \Yii::$app->cache->add('comments_product_'.$productId,$comments);
+        }
+        return $comments;
+    }
+
+    public static function getUserCommentToProduct($productId,$userId)
+    {
+        $comments = \Yii::$app->cache->get('comments_product_'.$productId);
+        if ($comments === false) {
+            $comments = CommentModel::find()->where(['idProduct'=>$productId])->all();
+            \Yii::$app->cache->add('comments_product_'.$productId,$comments);
+        }
+        foreach($comments as $comment)
+        {
+            if ($comment->idUser == $userId)
+                return $comment;
+        }
+        return null;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        \Yii::$app->cache->delete('comments_product_'.$this->idProduct);
+        \Yii::$app->cache->delete('product_'.$this->idProduct);
+        \Yii::$app->cache->delete('products_category_'.$this->getIdProduct0()->one()->idCategory);
+        if (parent::afterSave($insert, $changedAttributes)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function beforeDelete()
+    {
+        \Yii::$app->cache->delete('comments_product_'.$this->idProduct);
+        \Yii::$app->cache->delete('product_'.$this->idProduct);
+        \Yii::$app->cache->delete('products_category_'.$this->getIdProduct0()->one()->idCategory);
+        if (parent::beforeDelete()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

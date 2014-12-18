@@ -63,4 +63,26 @@ class CharacteristicValueModel extends \yii\db\ActiveRecord
     {
         return $this->hasOne(CharacteristicModel::className(), ['id' => 'idCharacteristic']);
     }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        \Yii::$app->cache->delete('product_'.$this->idProduct);
+        if (parent::afterSave($insert, $changedAttributes)) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function beforeDelete()
+    {
+        \Yii::$app->cache->delete('product_'.$this->idProduct);
+        if (parent::beforeDelete()) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -33,6 +33,10 @@ use app\models\ProductModel;
                 <div class="row">
                 <?php if (count($products)==0) echo "<div class='col-md-12 text-center'><img src='/files/nothing.png' /></div>";?>
                 <?php foreach ($products as $product) {?>
+<?php
+$dependency = new \yii\caching\ExpressionDependency(['expression'=>'\Yii::$app->cache->get(\'comments_product_\'.$product->id)']);
+if($this->beginCache('product_gridview_'.$product->id,['dependency'=>$dependecy])) {
+?>
                     <div class="col-sm-4 col-lg-4 col-md-4">
                         <div class="thumbnail">
                             <img src="<?='/'.$product->photo?>" alt="">
@@ -56,6 +60,10 @@ use app\models\ProductModel;
                             </div>
                         </div>
                     </div>
+<?php 
+$this->endCache('product_gridview_'.$product->id);
+}
+?>                   
                  <?php } ?>
                 </div>
 

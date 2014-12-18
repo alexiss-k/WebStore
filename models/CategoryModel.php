@@ -15,6 +15,7 @@ use Yii;
  */
 class CategoryModel extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
@@ -53,5 +54,69 @@ class CategoryModel extends \yii\db\ActiveRecord
     public function getCharacteristics()
     {
         return $this->hasMany(CharacteristicModel::className(), ['idCategory' => 'id']);
+    }
+
+    /**
+     * @return \app\models\CategoryModel
+     */
+    public static function getCategoryById($id)
+    {
+        $categories = \Yii::$app->cache->get('categories');
+        if ($categories === false) {
+            $categories = CategoryModel::find()->all();
+            \Yii::$app->cache->add('categories',$categories);
+        }
+
+        foreach($categories as $category)
+        {
+            if ($category->id == $id)
+                return $category;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array \app\models\CategoryModel
+     */
+    public static function getCategoriesByParentId($parentId)
+    {
+        $categories = \Yii::$app->cache->get('categories');
+        if ($categories === false) {
+            $categories = CategoryModel::find()->all();
+            \Yii::$app->cache->add('categories',$categories);
+        }
+
+        $result_categories = array();
+
+        foreach($categories as $category)
+        {
+            if ($category->parentId == $parentId)
+                $result_categories[] = $category;
+        }
+
+        return $result_categories;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        \Yii::$app->cache->delete('categories');
+        if (parent::afterSave($insert, $changedAttributes)) {
+            
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function beforeDelete()
+    {
+        \Yii::$app->cache->delete('categories');
+        if (parent::beforeDelete()) {
+            
+            return true;
+        } else {
+            return false;
+        }
     }
 }
