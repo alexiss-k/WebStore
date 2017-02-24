@@ -33,8 +33,8 @@ class CartController extends Controller
         $cart_info = \Yii::$app->request->cookies->getValue('cart');
         $cart_info = unserialize($cart_info);
         if (is_array($cart_info)) {
-            $products = ProductModel::getProducts(array_keys($cart_info));//find()->where(['id'=>array_keys($cart_info)])->all();
-            $shippings = ShippingModel::getShippings();//find()->all();
+            $products = ProductModel::getProducts(array_keys($cart_info));
+            $shippings = ShippingModel::getShippings();
             return $this->render('view',['cart'=>$cart_info,'products'=>$products,'shippings'=>$shippings]);
         }
         else 
@@ -84,7 +84,6 @@ class CartController extends Controller
         $cart_info = unserialize($cart_info);
         $cart_info = \Yii::$app->request->post('Cart');
         \Yii::$app->getSession()->setFlash('shipping_method', \Yii::$app->request->post('shipping'));
-        //echo \Yii::$app->request->post('shipping');
         \Yii::$app->response->cookies->add(new \yii\web\Cookie(['name' => 'cart', 'value' => serialize($cart_info)]));
         return $this->redirect('refresh-cart');
     }

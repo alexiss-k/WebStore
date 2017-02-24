@@ -120,10 +120,11 @@ class CommentController extends DefaultController
         $model = $this->findModel($id);
 
         $product = ProductModel::find()->where(['id'=>$model->idProduct])->one();
-        if ($product->amountRated > 1)
+        if ($product->amountRated > 1) {
             $product->rating = (($product->rating * $product->amountRated) - $model->mark) / ($product->amountRated - 1);
-        else
+        } else {
             $product->rating = 0;
+        }
         $product->amountRated = $product->amountRated - 1;
         $product->save();
 

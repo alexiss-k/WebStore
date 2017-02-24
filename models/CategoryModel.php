@@ -101,22 +101,12 @@ class CategoryModel extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         \Yii::$app->cache->delete('categories');
-        if (parent::afterSave($insert, $changedAttributes)) {
-            
-            return true;
-        } else {
-            return false;
-        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     public function beforeDelete()
     {
         \Yii::$app->cache->delete('categories');
-        if (parent::beforeDelete()) {
-            
-            return true;
-        } else {
-            return false;
-        }
+        return parent::beforeDelete();
     }
 }

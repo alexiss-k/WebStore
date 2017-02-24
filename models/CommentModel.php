@@ -101,11 +101,7 @@ class CommentModel extends \yii\db\ActiveRecord
         \Yii::$app->cache->delete('comments_product_'.$this->idProduct);
         \Yii::$app->cache->delete('product_'.$this->idProduct);
         \Yii::$app->cache->delete('products_category_'.$this->getIdProduct0()->one()->idCategory);
-        if (parent::afterSave($insert, $changedAttributes)) {
-            return true;
-        } else {
-            return false;
-        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     public function beforeDelete()
@@ -113,10 +109,6 @@ class CommentModel extends \yii\db\ActiveRecord
         \Yii::$app->cache->delete('comments_product_'.$this->idProduct);
         \Yii::$app->cache->delete('product_'.$this->idProduct);
         \Yii::$app->cache->delete('products_category_'.$this->getIdProduct0()->one()->idCategory);
-        if (parent::beforeDelete()) {
-            return true;
-        } else {
-            return false;
-        }
+        return parent::beforeDelete();
     }
 }

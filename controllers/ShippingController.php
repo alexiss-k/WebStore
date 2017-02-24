@@ -9,11 +9,11 @@ use yii\filters\VerbFilter;
 
 class ShippingController extends Controller
 {
+    // Shipping controller stub
 
     public function actionEmsShipping()
     {
         //Count EMS shipping
-        sleep(2);
         echo 150.34;
     }
 

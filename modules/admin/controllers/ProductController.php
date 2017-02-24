@@ -117,8 +117,9 @@ class ProductController extends DefaultController
                 $model->addError('photo','Avaliable file types: jpg, gif, png.');
             else
             {
-                if ($model->photo != "")
+                if ($model->photo != "") {
                     unlink(Yii::getAlias('@app').Yii::getAlias('@web').'/'.$model->photo);
+                }
                 $rnd = rand(0,9999);
                 $uploadedFile = UploadedFile::getInstance($model,'photo');
                 $fileName = 'files/'.$rnd.'_'.$uploadedFile->name;

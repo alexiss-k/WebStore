@@ -153,21 +153,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function afterSave($insert, $changedAttributes)
     {
         \Yii::$app->cache->delete('user_'.$this->id);
-        if (parent::afterSave($insert, $changedAttributes)) {
-            
-            return true;
-        } else {
-            return false;
-        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     public function beforeDelete()
     {
         \Yii::$app->cache->delete('user_'.$this->id);
-        if (parent::beforeDelete()) {
-            return true;
-        } else {
-            return false;
-        }
+        return parent::beforeDelete();
     }
 }

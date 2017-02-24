@@ -159,23 +159,13 @@ class ProductModel extends \yii\db\ActiveRecord
     {
         \Yii::$app->cache->delete('product_'.$this->id);
         \Yii::$app->cache->delete('products_category_'.$this->idCategory);
-        if (parent::afterSave($insert, $changedAttributes)) {
-            
-            return true;
-        } else {
-            return false;
-        }
+        return parent::afterSave($insert, $changedAttributes);
     }
 
     public function beforeDelete()
     {
         \Yii::$app->cache->delete('product_'.$this->id);
         \Yii::$app->cache->delete('products_category_'.$this->idCategory);
-        if (parent::beforeDelete()) {
-            
-            return true;
-        } else {
-            return false;
-        }
+        return parent::beforeDelete();
     }
 }
